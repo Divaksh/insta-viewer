@@ -1,10 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import Header from "./common/Header";
 
 ReactDOM.render(
-    <span>
-        Image Viewer
-    </span>, 
-    document.getElementById('root')
+  <span>
+    <Header />
+  </span>,
+  document.getElementById("root")
 );
