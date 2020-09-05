@@ -28,6 +28,12 @@ const customStyles = {
   },
 };
 
+const userPassport = {
+  username: "admin",
+  password: "admin",
+  accessToken: "",
+};
+
 class Login extends Component {
   constructor() {
     super();
@@ -37,6 +43,7 @@ class Login extends Component {
       requiredUsernameText: "display-none",
       requiredPasswordText: "display-none",
       incorrectCredentialsText: "display-none",
+      isLoggedIn: sessionStorage.getItem("access-token") == null ? false : true,
     };
   }
 
@@ -119,11 +126,41 @@ class Login extends Component {
   }; // End inputBoxChangeHandler
 
   loginButtonHandler = () => {
+    const username = this.state.username;
+    const password = this.state.password;
+
+    // Show required text if submit empty form
     if (this.state.username === "") {
       this.setState({ requiredUsernameText: "display-block" });
     }
     if (this.state.password === "") {
       this.setState({ requiredPasswordText: "display-block" });
+    }
+
+    if (this.state.incorrectCredentialsText === "display-block") {
+      this.setState({ incorrectCredentialsText: "display-none" });
+    }
+
+    //if username and passwords are not blank validate the user
+    if (username !== "" && password !== "") {
+      this.validateUser(username, password);
+    }
+  };
+
+  validateUser = (username, password) => {
+    if (
+      username === userPassport.username &&
+      password === userPassport.password
+    ) {
+      sessionStorage.setItem("access-token", userPassport.accessToken);
+      this.setState({
+        incorrectCredentialsText: "display-none",
+        isLoggedIn: true,
+      });
+    } else {
+      this.setState({
+        incorrectCredentialsText: "display-block",
+      });
     }
   };
 }
