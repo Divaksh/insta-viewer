@@ -3,11 +3,12 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import Header from "./common/Header";
 import Login from "./screens/login/Login";
+import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
-  <span>
+  <BrowserRouter>
     <Header />
     <Login />
-  </span>,
+  </BrowserRouter>,
   document.getElementById("root")
 );

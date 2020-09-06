@@ -8,7 +8,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import "./Login.css";
-
+import { Redirect } from "react-router-dom";
 const customStyles = {
   loginContainer: {
     justifyContent: "center",
@@ -19,19 +19,21 @@ const customStyles = {
     display: "flex",
     marginTop: "20px",
     justifyContent: "center",
+    padding: "20px",
   },
   loginForm: {
-    width: "100%",
+    minWidth: "100%",
   },
   loginTitle: {
-    fontSize: 20,
+    fontSize: 22,
   },
 };
 
 const userPassport = {
   username: "admin",
   password: "admin",
-  accessToken: "",
+  accessToken:
+    "IGQVJYSFhHOU11Um10SHhlRjJxV01HcVhjbVYwOWdCQlFFcDZAjQ0ZAaY2N4TDhmME1oUFNfMTlCMFBYNzNTRXduR1JLX1lwX1E0MmhlTmJSSlllZAG40eUtmeFhHTGlqb1Q4Vm9qQ2lEeTdaZAzI4ZAUhuVEU1Q25ycGxVRko4",
 };
 
 class Login extends Component {
@@ -48,10 +50,13 @@ class Login extends Component {
   }
 
   render() {
+    if (this.state.isLoggedIn === true) {
+      return <Redirect to="/home" />;
+    }
     return (
       <div style={customStyles.loginContainer}>
         <Card style={customStyles.loginCard} variant="outlined">
-          <CardContent>
+          <CardContent style={{ width: "100%" }}>
             <Typography style={customStyles.loginTitle}> LOGIN </Typography>
             <br />
             <FormControl required style={customStyles.loginForm}>
