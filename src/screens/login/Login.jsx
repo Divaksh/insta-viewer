@@ -165,11 +165,18 @@ class Login extends Component {
       this.setState({
         incorrectCredentialsText: "display-none",
       });
+      this.navigateToHome();
     } else {
       this.setState({
         incorrectCredentialsText: "display-block",
       });
     }
+  };
+
+  // Redirect User to Home Page on Successful Login
+  navigateToHome = () => {
+    //TODO: Fix the redirection issue
+    this.props.history.replace("/home");
   };
 }
 
