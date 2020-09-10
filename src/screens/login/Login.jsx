@@ -8,7 +8,6 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import "./Login.css";
-import { Redirect } from "react-router-dom";
 import Header from "../../common/Header";
 
 const customStyles = {
@@ -47,15 +46,11 @@ class Login extends Component {
       requiredUsernameText: "display-none",
       requiredPasswordText: "display-none",
       incorrectCredentialsText: "display-none",
-      isLoggedIn: false, //sessionStorage.getItem("access-token") == null ? false : true,
       isLogin: true,
     };
   }
 
   render() {
-    if (this.state.isLoggedIn === true) {
-      return <Redirect to="/home" />;
-    }
     return (
       <>
         <Header state={this.state} />
@@ -169,7 +164,6 @@ class Login extends Component {
       sessionStorage.setItem("access-token", userPassport.accessToken);
       this.setState({
         incorrectCredentialsText: "display-none",
-        isLoggedIn: true,
       });
     } else {
       this.setState({

@@ -1,13 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import Header from "./common/Header";
-import Login from "./screens/login/Login";
 import { BrowserRouter } from "react-router-dom";
+import Controller from "./common/Controller";
 
 ReactDOM.render(
   <BrowserRouter>
-    <Login />
+    <Controller />
   </BrowserRouter>,
   document.getElementById("root")
 );
