@@ -98,6 +98,11 @@ const Header = ({ state }) => {
               <span className="logoTitle">Image Viewer</span>
             </Link>
           )}
+          {state.isError && (
+            <Link style={{ textDecoration: "none", color: "white" }} to="/home">
+              <span className="logoTitle">404 not found</span>
+            </Link>
+          )}
           <div className={classes.grow} />
           {state.isHome && (
             <div className={classes.search}>
