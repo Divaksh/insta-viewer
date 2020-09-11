@@ -10,8 +10,10 @@ export default function Controller() {
     window.sessionStorage.getItem("access-token") != null &&
     window.sessionStorage.getItem("access-token") !== "";
 
-  const authDetails = {
+  const apiDetails = {
     baseUrl: "https://graph.instagram.com/",
+    mediaList:
+      "https://graph.instagram.com/me/media?fields=id,caption&access_token=",
     accessToken: window.sessionStorage.getItem("access-token"),
   };
 
@@ -21,7 +23,7 @@ export default function Controller() {
         path="/home"
         render={() =>
           isLoggedIn() ? (
-            <Home baseUrl={authDetails} />
+            <Home apiDetails={apiDetails} />
           ) : (
             <Redirect to="/login" />
           )
