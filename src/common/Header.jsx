@@ -10,7 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
-
+import ProfilePic from "../assets/ProfilePic.jpg";
 // Custom Styles to over ride material ui default styles
 
 const useStyles = makeStyles((theme) => ({
@@ -125,7 +125,7 @@ const Header = ({ state }) => {
               <IconButton onClick={handleClick}>
                 <Avatar
                   alt="Profile Pic"
-                  src={state.userProfileUrl}
+                  src={ProfilePic}
                   className={classes.avatar}
                   style={{ border: "1px solid #fff" }}
                 />
