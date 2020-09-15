@@ -1,0 +1,10 @@
+.new-comment {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.add-comment-btn {
+  cursor: pointer;
+  margin-left: 10px;
+}

@@ -22,6 +22,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import FavoriteIconBorder from "@material-ui/icons/FavoriteBorder";
 import FavoriteIconFill from "@material-ui/icons/Favorite";
+import FormControl from "@material-ui/core/FormControl";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 import ProfilePic from "../../assets/ProfilePic.jpg";
 
@@ -185,6 +188,24 @@ class Home extends Component {
                       {media.likeCount <= 1 ? " Like" : " Likes"}
                     </Typography>
                   </CardActions>
+
+                  <CardContent>
+                    <div className="new-comment">
+                      <FormControl className="post-comment-form-control">
+                        <TextField
+                          id={"textfield-" + media.id}
+                          label="Add a comment"
+                        />
+                      </FormControl>
+                      <div className="add-comment-btn">
+                        <FormControl>
+                          <Button variant="contained" color="primary">
+                            ADD
+                          </Button>
+                        </FormControl>
+                      </div>
+                    </div>
+                  </CardContent>
                 </Card>
               ))}
             </Grid>
