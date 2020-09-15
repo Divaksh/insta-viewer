@@ -56,7 +56,8 @@ class Home extends Component {
     super();
     this.state = {
       isHome: true,
-      response: [],
+      mediaData: [],
+      likes: [],
     };
   }
 
@@ -64,9 +65,18 @@ class Home extends Component {
     const accessToken = this.props.apiDetails.accessToken;
     const endPoint = this.props.apiDetails.mediaList + accessToken;
     const { data: response } = await axios.get(endPoint);
-    console.log(response.data);
-    this.setState({ response: response.data });
-    console.table(this.state.response[1]);
+    //Set mediaData state with api response
+    this.setState({ mediaData: response.data });
+
+    //Set likes count for each media in the state
+    this.state.mediaData.map((media) =>
+      this.setState({
+        likes: [
+          ...this.state.likes,
+          { id: media.id, count: Math.floor(Math.random() * 20) },
+        ],
+      })
+    );
   }
 
   // Convert post date to DD/MM/YYYY HH:MM:SS format
@@ -104,7 +114,7 @@ class Home extends Component {
             direction="row"
           >
             <Grid item xs={6}>
-              {this.state.response.map((data) => (
+              {this.state.mediaData.map((media) => (
                 <Card style={customStyles.root}>
                   <CardHeader
                     avatar={
@@ -121,13 +131,13 @@ class Home extends Component {
                         <MoreVertIcon />
                       </IconButton>
                     }
-                    title={data.username}
-                    subheader={this.covertDateTime(data.timestamp)}
+                    title={media.username}
+                    subheader={this.covertDateTime(media.timestamp)}
                   />
                   <CardMedia
                     style={customStyles.media}
-                    image={data.media_url}
-                    title={data.caption}
+                    image={media.media_url}
+                    title={media.caption}
                   />
                   <CardContent>
                     <Typography
@@ -135,7 +145,7 @@ class Home extends Component {
                       color="textSecondary"
                       component="p"
                     >
-                      {data.caption}
+                      {media.caption}
                     </Typography>
                   </CardContent>
                   <CardActions disableSpacing>
