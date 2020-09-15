@@ -76,7 +76,7 @@ class Home extends Component {
           ...this.state.mediaData,
           {
             ...media,
-            count: Math.floor(Math.random() * 20),
+            likeCount: Math.floor(Math.random() * 20),
             isLiked: false,
           },
         ],
@@ -106,6 +106,23 @@ class Home extends Component {
     );
   };
 
+  // Like handler, increase and decrease the like count and set like status
+  handleLike = (media) => {
+    const mediaData = [...this.state.mediaData];
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+
+    //do action based on isLiked state
+    if (mediaData[index].isLiked) {
+      mediaData[index].likeCount--;
+      mediaData[index].isLiked = false;
+    } else {
+      mediaData[index].likeCount++;
+      mediaData[index].isLiked = true;
+    }
+    this.setState({ mediaData });
+  };
+
   render() {
     return (
       <>
@@ -119,7 +136,7 @@ class Home extends Component {
             direction="row"
           >
             <Grid item xs={6}>
-              {this.state.mediaData.map((media, index) => (
+              {this.state.mediaData.map((media) => (
                 <Card style={customStyles.root}>
                   <CardHeader
                     avatar={
@@ -153,7 +170,21 @@ class Home extends Component {
                       {media.caption}
                     </Typography>
                   </CardContent>
-                  <CardActions></CardActions>
+                  <CardActions>
+                    <IconButton
+                      aria-label="Add to favorites"
+                      onClick={this.handleLike.bind(this, media)}
+                    >
+                      {media.isLiked && (
+                        <FavoriteIconFill style={{ color: "#F44336" }} />
+                      )}
+                      {!media.isLiked && <FavoriteIconBorder />}
+                    </IconButton>
+                    <Typography component="p">
+                      {media.likeCount}
+                      {media.likeCount <= 1 ? " Like" : " Likes"}
+                    </Typography>
+                  </CardActions>
                 </Card>
               ))}
             </Grid>
