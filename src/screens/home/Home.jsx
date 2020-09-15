@@ -25,6 +25,8 @@ import FavoriteIconFill from "@material-ui/icons/Favorite";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 
 import ProfilePic from "../../assets/ProfilePic.jpg";
 
@@ -57,8 +59,8 @@ const customStyles = {
 };
 
 class Home extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       isHome: true,
       mediaData: [],
@@ -81,6 +83,8 @@ class Home extends Component {
             ...media,
             likeCount: Math.floor(Math.random() * 20),
             isLiked: false,
+            comments: [],
+            comment: "",
           },
         ],
       })
@@ -124,6 +128,26 @@ class Home extends Component {
       mediaData[index].isLiked = true;
     }
     this.setState({ mediaData });
+  };
+
+  commentChangeHandler = (e) => {
+    this.setState({ comment: e.target.value });
+  };
+
+  // adds new comment and update the state with new comments
+  handleComment = (media) => {
+    if (this.state.comment === "" || typeof this.state.comment === undefined) {
+      return;
+    }
+    const comment = this.state.comment;
+    const mediaData = [...this.state.mediaData];
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+    mediaData[index].comments.push(comment);
+    this.setState({ mediaData });
+
+    //sets comment state back to the empty when comment is posted
+    this.setState({ comment: "" });
   };
 
   render() {
@@ -191,15 +215,21 @@ class Home extends Component {
 
                   <CardContent>
                     <div className="new-comment">
-                      <FormControl className="post-comment-form-control">
-                        <TextField
-                          id={"textfield-" + media.id}
-                          label="Add a comment"
+                      <FormControl style={{ flexGrow: 1 }}>
+                        <InputLabel htmlFor="comment">Add Comment</InputLabel>
+                        <Input
+                          id={"comment" + media.id}
+                          value={this.state.comment}
+                          onChange={this.commentChangeHandler}
                         />
                       </FormControl>
                       <div className="add-comment-btn">
                         <FormControl>
-                          <Button variant="contained" color="primary">
+                          <Button
+                            onClick={this.handleComment.bind(this, media)}
+                            variant="contained"
+                            color="primary"
+                          >
                             ADD
                           </Button>
                         </FormControl>
