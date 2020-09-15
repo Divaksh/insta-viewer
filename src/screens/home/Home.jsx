@@ -20,6 +20,8 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import FavoriteIconBorder from "@material-ui/icons/FavoriteBorder";
+import FavoriteIconFill from "@material-ui/icons/Favorite";
 
 import ProfilePic from "../../assets/ProfilePic.jpg";
 
@@ -57,7 +59,6 @@ class Home extends Component {
     this.state = {
       isHome: true,
       mediaData: [],
-      likes: [],
     };
   }
 
@@ -65,15 +66,19 @@ class Home extends Component {
     const accessToken = this.props.apiDetails.accessToken;
     const endPoint = this.props.apiDetails.mediaList + accessToken;
     const { data: response } = await axios.get(endPoint);
-    //Set mediaData state with api response
-    this.setState({ mediaData: response.data });
+    //Set api response in const for creating mediaData
+    const apiResponse = response.data;
 
-    //Set likes count for each media in the state
-    this.state.mediaData.map((media) =>
+    //Set likes data for each media in the state
+    apiResponse.map((media) =>
       this.setState({
-        likes: [
-          ...this.state.likes,
-          { id: media.id, count: Math.floor(Math.random() * 20) },
+        mediaData: [
+          ...this.state.mediaData,
+          {
+            ...media,
+            count: Math.floor(Math.random() * 20),
+            isLiked: false,
+          },
         ],
       })
     );
@@ -114,7 +119,7 @@ class Home extends Component {
             direction="row"
           >
             <Grid item xs={6}>
-              {this.state.mediaData.map((media) => (
+              {this.state.mediaData.map((media, index) => (
                 <Card style={customStyles.root}>
                   <CardHeader
                     avatar={
@@ -148,11 +153,7 @@ class Home extends Component {
                       {media.caption}
                     </Typography>
                   </CardContent>
-                  <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
-                    </IconButton>
-                  </CardActions>
+                  <CardActions></CardActions>
                 </Card>
               ))}
             </Grid>
