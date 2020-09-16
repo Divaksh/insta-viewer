@@ -27,6 +27,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+import Divider from "@material-ui/core/Divider";
 
 import ProfilePic from "../../assets/ProfilePic.jpg";
 
@@ -89,6 +90,7 @@ class Home extends Component {
         ],
       })
     );
+    console.log(this.state.mediaData);
   }
 
   // Convert post date to DD/MM/YYYY HH:MM:SS format
@@ -188,16 +190,29 @@ class Home extends Component {
                     image={media.media_url}
                     title={media.caption}
                   />
+
+                  <Divider variant="middle" className="divider" />
                   <CardContent>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {media.caption}
+                    <br />
+
+                    <Typography component="p">
+                      <div className="post-caption">
+                        {media.caption.split("\n")[0]}
+                      </div>
+                    </Typography>
+                    <Typography component="p">
+                      <div className="post-tags">
+                        {media.caption
+                          .split(" ")
+                          .filter((v) => v.startsWith("#"))
+                          .map((tag, index) => (
+                            <span key={index}>{tag + " "}</span>
+                          ))}
+                      </div>
                     </Typography>
                   </CardContent>
                   <CardActions>
+                    {/* Show like buttons with like counts */}
                     <IconButton
                       aria-label="Add to favorites"
                       onClick={this.handleLike.bind(this, media)}
