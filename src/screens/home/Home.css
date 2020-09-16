@@ -8,3 +8,8 @@
   cursor: pointer;
   margin-left: 10px;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
