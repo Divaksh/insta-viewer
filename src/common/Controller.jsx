@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import Login from "../screens/login/Login";
 import Home from "../screens/home/Home";
+import Profile from "../screens/profile/Profile";
 import NotFound from "./NotFound";
 
 // Main router component to handle all page redirects
@@ -18,6 +19,17 @@ export default function Controller() {
 
   return (
     <Switch>
+      <Route
+        path="/profile"
+        render={() =>
+          isLoggedIn() ? (
+            <Profile apiDetails={apiDetails} />
+          ) : (
+            <Redirect to="/login" />
+          )
+        }
+      />
+
       <Route
         path="/home"
         render={() =>
