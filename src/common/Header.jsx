@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ state }) => {
+const Header = ({ state, onSearch }) => {
   //store custom Styles in classes
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -112,9 +112,7 @@ const Header = ({ state }) => {
                 <SearchIcon />
               </div>
               <InputBase
-                onChange={(e) => {
-                  state.searchHandler(e.target.value);
-                }}
+                onChange={(e) => onSearch(e)}
                 placeholder="Search…"
                 classes={{
                   input: classes.inputInput,
