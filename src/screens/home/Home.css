@@ -1,0 +1,31 @@
+.new-comment {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.add-comment-btn {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.divider {
+  margin-top: 10px !important;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.post-caption {
+  overflow: hidden;
+  text-overflow: clip;
+  margin-top: 5px;
+}
+
+.post-tags {
+  color: #4dabf5;
+}

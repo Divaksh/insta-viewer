@@ -10,6 +10,8 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
+import ProfilePic from "../assets/ProfilePic.jpg";
+import { useHistory } from "react-router-dom";
 
 // Custom Styles to over ride material ui default styles
 
@@ -63,23 +65,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = ({ state }) => {
+const Header = ({ state, onSearch }) => {
   //store custom Styles in classes
   const classes = useStyles();
-  const [setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  let history = useHistory();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleAccount = () => {
-    handleAccount();
-    handleClose();
+    history.push("/profile");
   };
 
   const handleLogout = () => {
-    handleLogout();
-    handleClose();
+    window.sessionStorage.removeItem("access-token");
+    history.push("/login");
   };
 
   const handleClose = () => {
@@ -110,9 +112,7 @@ const Header = ({ state }) => {
                 <SearchIcon />
               </div>
               <InputBase
-                onChange={(e) => {
-                  state.searchHandler(e.target.value);
-                }}
+                onChange={(e) => onSearch(e)}
                 placeholder="Search…"
                 classes={{
                   input: classes.inputInput,
@@ -125,15 +125,15 @@ const Header = ({ state }) => {
               <IconButton onClick={handleClick}>
                 <Avatar
                   alt="Profile Pic"
-                  src={state.userProfileUrl}
+                  src={ProfilePic}
                   className={classes.avatar}
                   style={{ border: "1px solid #fff" }}
                 />
               </IconButton>
               <Popover
                 id="simple-menu"
-                anchorEl={state.anchorEl}
-                open={Boolean(state.anchorEl)}
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
                 onClose={handleClose}
                 anchorOrigin={{
                   vertical: "bottom",
