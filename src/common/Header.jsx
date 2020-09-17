@@ -77,12 +77,11 @@ const Header = ({ state }) => {
 
   const handleAccount = () => {
     history.push("/profile");
-    handleClose();
   };
 
   const handleLogout = () => {
-    handleLogout();
-    handleClose();
+    window.sessionStorage.removeItem("access-token");
+    history.push("/login");
   };
 
   const handleClose = () => {
