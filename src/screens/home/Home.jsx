@@ -69,7 +69,7 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    const accessToken = this.props.apiDetails.accessToken;
+    const accessToken = window.sessionStorage.getItem("access-token");
     const endPoint = this.props.apiDetails.mediaList + accessToken;
     const { data: response } = await axios.get(endPoint);
     //Set api response in const for creating mediaData

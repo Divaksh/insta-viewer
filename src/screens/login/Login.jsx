@@ -7,8 +7,10 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+import { useHistory } from "react-router-dom";
 import "./Login.css";
 import Header from "../../common/Header";
+import { withRouter } from "react-router";
 
 const customStyles = {
   loginContainer: {
@@ -175,9 +177,9 @@ class Login extends Component {
 
   // Redirect User to Home Page on Successful Login
   navigateToHome = () => {
-    //TODO: Fix the redirection issue
+    //No going back once user is logged in
     this.props.history.replace("/home");
   };
 }
 
-export default Login;
+export default withRouter(Login);

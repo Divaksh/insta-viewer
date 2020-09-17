@@ -11,6 +11,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
 import ProfilePic from "../assets/ProfilePic.jpg";
+import { useHistory } from "react-router-dom";
+
 // Custom Styles to over ride material ui default styles
 
 const useStyles = makeStyles((theme) => ({
@@ -66,14 +68,15 @@ const useStyles = makeStyles((theme) => ({
 const Header = ({ state }) => {
   //store custom Styles in classes
   const classes = useStyles();
-  const [setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  let history = useHistory();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleAccount = () => {
-    handleAccount();
+    history.push("/profile");
     handleClose();
   };
 
@@ -132,8 +135,8 @@ const Header = ({ state }) => {
               </IconButton>
               <Popover
                 id="simple-menu"
-                anchorEl={state.anchorEl}
-                open={Boolean(state.anchorEl)}
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
                 onClose={handleClose}
                 anchorOrigin={{
                   vertical: "bottom",

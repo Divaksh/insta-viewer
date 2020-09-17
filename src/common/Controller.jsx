@@ -14,7 +14,6 @@ export default function Controller() {
     baseUrl: "https://graph.instagram.com/",
     mediaList:
       "https://graph.instagram.com/me/media?fields=id,caption,media_type,media_url,username,timestamp&access_token=",
-    accessToken: window.sessionStorage.getItem("access-token"),
   };
 
   return (
