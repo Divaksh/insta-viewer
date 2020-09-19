@@ -18,6 +18,31 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Modal from "@material-ui/core/Modal";
 import Grid from "@material-ui/core/Grid";
 import EditIcon from "@material-ui/icons/Edit";
+import CardMedia from "@material-ui/core/CardMedia";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+
+const styles = {
+  paper: {
+    position: "relative",
+    width: "150px",
+    backgroundColor: "#fff",
+    top: "30%",
+    margin: "0 auto",
+    boxShadow: "2px 2px #888888",
+    padding: "20px",
+  },
+  media: {
+    height: "150px",
+    paddingTop: "56.25%", // 16:9
+  },
+  imageModal: {
+    backgroundColor: "#fff",
+    margin: "0 auto",
+    boxShadow: "2px 2px #888888",
+    padding: "10px",
+  },
+};
 
 class Profile extends Component {
   constructor(props) {
@@ -27,8 +52,8 @@ class Profile extends Component {
       mediaData: [],
       username: "",
       posts: "",
-      follows: "10M",
-      followedby: "1",
+      follows: "1",
+      followedby: "10M",
       name: "Divaksh Jain",
       openNameEditModal: false,
       closeNameEditModal: true,
@@ -168,6 +193,29 @@ class Profile extends Component {
               </Grid>
               <Grid item xs={4} />
             </Grid>
+          </Container>
+
+          {/* displaying all posts */}
+          <Container>
+            {this.state.mediaData !== null && (
+              <GridList
+                cellHeight={"auto"}
+                cols={3}
+                style={{ padding: "40px" }}
+              >
+                {this.state.mediaData.map((media) => (
+                  <GridListTile key={media.id}>
+                    <CardMedia
+                      id={media.id}
+                      style={styles.media}
+                      image={media.media_url}
+                      title={media.caption != null ? media.caption.text : ""}
+                      onClick={this.handleOpenImageModal}
+                    />
+                  </GridListTile>
+                ))}
+              </GridList>
+            )}
           </Container>
         </div>
       </>
