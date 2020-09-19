@@ -135,6 +135,9 @@ class Home extends Component {
       mediaData[index].isLiked = true;
     }
     this.setState({ mediaData });
+
+    //sets like state in browser storage for futher use
+    localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
   };
 
   commentChangeHandler = (e) => {
@@ -155,6 +158,9 @@ class Home extends Component {
 
     //sets comment state back to the empty when comment is posted
     this.setState({ comment: "" });
+
+    //sets comments state in browser storage for futher use
+    localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
   };
 
   render() {
