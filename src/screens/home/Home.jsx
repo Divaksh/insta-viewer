@@ -91,7 +91,6 @@ class Home extends Component {
         ],
       })
     );
-    console.log(this.state.mediaData);
   }
 
   // Convert post date to DD/MM/YYYY HH:MM:SS format

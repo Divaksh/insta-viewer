@@ -12,6 +12,7 @@ import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
 import ProfilePic from "../assets/ProfilePic.jpg";
 import { useHistory } from "react-router-dom";
+import { ColorLensOutlined } from "@material-ui/icons";
 
 // Custom Styles to over ride material ui default styles
 
@@ -76,7 +77,10 @@ const Header = ({ state, onSearch }) => {
   };
 
   const handleAccount = () => {
-    history.push("/profile");
+    history.push({
+      pathname: "/profile",
+      mediaData: state.mediaData,
+    });
   };
 
   const handleLogout = () => {
