@@ -21,6 +21,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import CardMedia from "@material-ui/core/CardMedia";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
+import CardContent from "@material-ui/core/CardContent";
 
 const styles = {
   paper: {
@@ -291,11 +292,13 @@ class Profile extends Component {
                       }}
                     >
                       <div>
+                        {/* Show all media caption*/}
                         <Typography component="p">
                           <div className="post-caption">
                             {this.state.currentMedia.caption.split("\n")[0]}
                           </div>
                         </Typography>
+                        {/* Show all media hashtags*/}
                         <Typography component="p">
                           <div className="post-tags">
                             {this.state.currentMedia.caption
@@ -306,6 +309,57 @@ class Profile extends Component {
                               ))}
                           </div>
                         </Typography>
+                        {/* Show all comments*/}
+                        <CardContent>
+                          {this.state.currentMedia.comments.length > 0 &&
+                            this.state.currentMedia.comments.map(
+                              (comment, index) => {
+                                return (
+                                  <div key={index} className="row">
+                                    <Typography
+                                      component="p"
+                                      style={{
+                                        fontWeight: "bold",
+                                        paddingRight: "5px",
+                                      }}
+                                    >
+                                      {this.state.currentMedia.username}:
+                                    </Typography>
+                                    <Typography component="p">
+                                      {comment}
+                                    </Typography>
+                                  </div>
+                                );
+                              }
+                            )}
+                          {/*Add new comment */}
+                          <div className="new-comment">
+                            <FormControl style={{ flexGrow: 1 }}>
+                              <InputLabel htmlFor="comment">
+                                Add Comment
+                              </InputLabel>
+                              <Input
+                                id={"comment" + this.state.currentMedia.id}
+                                value={this.state.comment}
+                                onChange={this.commentChangeHandler}
+                              />
+                            </FormControl>
+                            <div className="add-comment-btn">
+                              <FormControl>
+                                <Button
+                                  onClick={this.handleComment.bind(
+                                    this,
+                                    this.state.currentMedia
+                                  )}
+                                  variant="contained"
+                                  color="primary"
+                                >
+                                  ADD
+                                </Button>
+                              </FormControl>
+                            </div>
+                          </div>
+                        </CardContent>
                       </div>
                     </div>
                   </div>
@@ -375,6 +429,29 @@ class Profile extends Component {
 
   handleCloseImageModal = () => {
     this.setState({ imageModalOpen: false });
+  };
+
+  commentChangeHandler = (e) => {
+    this.setState({ comment: e.target.value });
+  };
+
+  // adds new comment and update the state with new comments
+  handleComment = (media) => {
+    if (this.state.comment === "" || typeof this.state.comment === undefined) {
+      return;
+    }
+    const comment = this.state.comment;
+    const mediaData = [...this.state.mediaData];
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+    mediaData[index].comments.push(comment);
+    this.setState({ mediaData });
+
+    //sets comment state back to the empty when comment is posted
+    this.setState({ comment: "" });
+
+    //sets comments state in browser storage for futher use
+    localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
   };
 }
 
