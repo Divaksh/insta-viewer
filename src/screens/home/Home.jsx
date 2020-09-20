@@ -163,131 +163,135 @@ class Home extends Component {
     return (
       <>
         <Header state={this.state} onSearch={this.handleSearch} />
-        <Container maxWidth="lg" id="mainContainer">
-          <Grid
-            container
-            spacing={2}
-            alignContent="center"
-            justify="flex-start"
-            direction="row"
-          >
-            {this.state.mediaData.map((media) =>
-              /* Show results only if, keyword is undefined, empty or contain perticular text */
-              this.state.keyword === undefined ||
-              this.state.keyword === "" ||
-              media.caption.split("\n")[0].includes(this.state.keyword) ? (
-                <Grid item xs={12} md={6} lg={6}>
-                  <Card style={customStyles.fullHeight}>
-                    <CardHeader
-                      avatar={
-                        <Avatar
-                          aria-label="recipe"
-                          style={customStyles.avatar}
-                          src={ProfilePic}
+        <div className="mainContainer">
+          <Container maxWidth="lg">
+            <Grid
+              container
+              spacing={2}
+              alignContent="center"
+              justify="flex-start"
+              direction="row"
+            >
+              {this.state.mediaData.map((media) =>
+                /* Show results only if, keyword is undefined, empty or contain perticular text */
+                this.state.keyword === undefined ||
+                this.state.keyword === "" ||
+                media.caption.split("\n")[0].includes(this.state.keyword) ? (
+                  <Grid item xs={12} md={6} lg={6}>
+                    <Card style={customStyles.fullHeight}>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            aria-label="recipe"
+                            style={customStyles.avatar}
+                            src={ProfilePic}
+                          >
+                            R
+                          </Avatar>
+                        }
+                        action={
+                          <IconButton aria-label="settings">
+                            <MoreVertIcon />
+                          </IconButton>
+                        }
+                        title={media.username}
+                        subheader={this.covertDateTime(media.timestamp)}
+                      />
+                      <CardMedia
+                        style={customStyles.media}
+                        image={media.media_url}
+                        title={media.caption}
+                      />
+
+                      <Divider variant="middle" className="divider" />
+                      <CardContent>
+                        <br />
+
+                        <Typography component="p">
+                          <div className="post-caption">
+                            {media.caption.split("\n")[0]}
+                          </div>
+                        </Typography>
+                        <Typography component="p">
+                          <div className="post-tags">
+                            {media.caption
+                              .split(" ")
+                              .filter((v) => v.startsWith("#"))
+                              .map((tag, index) => (
+                                <span key={index}>{tag + " "}</span>
+                              ))}
+                          </div>
+                        </Typography>
+                      </CardContent>
+                      <CardActions>
+                        {/* Show like buttons with like counts */}
+                        <IconButton
+                          aria-label="Add to favorites"
+                          onClick={this.handleLike.bind(this, media)}
                         >
-                          R
-                        </Avatar>
-                      }
-                      action={
-                        <IconButton aria-label="settings">
-                          <MoreVertIcon />
+                          {media.isLiked && (
+                            <FavoriteIconFill style={{ color: "#F44336" }} />
+                          )}
+                          {!media.isLiked && <FavoriteIconBorder />}
                         </IconButton>
-                      }
-                      title={media.username}
-                      subheader={this.covertDateTime(media.timestamp)}
-                    />
-                    <CardMedia
-                      style={customStyles.media}
-                      image={media.media_url}
-                      title={media.caption}
-                    />
+                        <Typography component="p">
+                          {media.likeCount}
+                          {media.likeCount <= 1 ? " Like" : " Likes"}
+                        </Typography>
+                      </CardActions>
 
-                    <Divider variant="middle" className="divider" />
-                    <CardContent>
-                      <br />
+                      {/* Show all comments*/}
+                      <CardContent>
+                        {media.comments.length > 0 &&
+                          media.comments.map((comment, index) => {
+                            return (
+                              <div key={index} className="row">
+                                <Typography
+                                  component="p"
+                                  style={{
+                                    fontWeight: "bold",
+                                    paddingRight: "5px",
+                                  }}
+                                >
+                                  {media.username}:
+                                </Typography>
+                                <Typography component="p">{comment}</Typography>
+                              </div>
+                            );
+                          })}
 
-                      <Typography component="p">
-                        <div className="post-caption">
-                          {media.caption.split("\n")[0]}
-                        </div>
-                      </Typography>
-                      <Typography component="p">
-                        <div className="post-tags">
-                          {media.caption
-                            .split(" ")
-                            .filter((v) => v.startsWith("#"))
-                            .map((tag, index) => (
-                              <span key={index}>{tag + " "}</span>
-                            ))}
-                        </div>
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      {/* Show like buttons with like counts */}
-                      <IconButton
-                        aria-label="Add to favorites"
-                        onClick={this.handleLike.bind(this, media)}
-                      >
-                        {media.isLiked && (
-                          <FavoriteIconFill style={{ color: "#F44336" }} />
-                        )}
-                        {!media.isLiked && <FavoriteIconBorder />}
-                      </IconButton>
-                      <Typography component="p">
-                        {media.likeCount}
-                        {media.likeCount <= 1 ? " Like" : " Likes"}
-                      </Typography>
-                    </CardActions>
-
-                    {/* Show all comments*/}
-                    <CardContent>
-                      {media.comments.length > 0 &&
-                        media.comments.map((comment, index) => {
-                          return (
-                            <div key={index} className="row">
-                              <Typography
-                                component="p"
-                                style={{
-                                  fontWeight: "bold",
-                                  paddingRight: "5px",
-                                }}
-                              >
-                                {media.username}:
-                              </Typography>
-                              <Typography component="p">{comment}</Typography>
-                            </div>
-                          );
-                        })}
-
-                      {/*Add new comment */}
-                      <div className="new-comment">
-                        <FormControl style={{ flexGrow: 1 }}>
-                          <InputLabel htmlFor="comment">Add Comment</InputLabel>
-                          <Input
-                            id={"comment" + media.id}
-                            value={this.state.comment}
-                            onChange={this.commentChangeHandler}
-                          />
-                        </FormControl>
-                        <div className="add-comment-btn">
-                          <FormControl>
-                            <Button
-                              onClick={this.handleComment.bind(this, media)}
-                              variant="contained"
-                              color="primary"
-                            >
-                              ADD
-                            </Button>
+                        {/*Add new comment */}
+                        <div className="new-comment">
+                          <FormControl style={{ flexGrow: 1 }}>
+                            <InputLabel htmlFor="comment">
+                              Add Comment
+                            </InputLabel>
+                            <Input
+                              id={"comment" + media.id}
+                              value={this.state.comment}
+                              onChange={this.commentChangeHandler}
+                            />
                           </FormControl>
+                          <div className="add-comment-btn">
+                            <FormControl>
+                              <Button
+                                onClick={this.handleComment.bind(this, media)}
+                                variant="contained"
+                                color="primary"
+                              >
+                                ADD
+                              </Button>
+                            </FormControl>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ) : null
-            )}
-          </Grid>
-        </Container>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ) : null
+              )}
+            </Grid>
+          </Container>
+        </div>
       </>
     );
   }
