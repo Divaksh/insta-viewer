@@ -22,6 +22,10 @@ import CardMedia from "@material-ui/core/CardMedia";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import CardContent from "@material-ui/core/CardContent";
+import IconButton from "@material-ui/core/IconButton";
+import FavoriteIconBorder from "@material-ui/icons/FavoriteBorder";
+import FavoriteIconFill from "@material-ui/icons/Favorite";
+import CardActions from "@material-ui/core/CardActions";
 
 const styles = {
   paper: {
@@ -332,6 +336,31 @@ class Profile extends Component {
                                 );
                               }
                             )}
+                          <CardActions>
+                            {/* Show like buttons with like counts */}
+                            <IconButton
+                              aria-label="Add to favorites"
+                              onClick={this.handleLike.bind(
+                                this,
+                                this.state.currentMedia
+                              )}
+                            >
+                              {this.state.currentMedia.isLiked && (
+                                <FavoriteIconFill
+                                  style={{ color: "#F44336" }}
+                                />
+                              )}
+                              {!this.state.currentMedia.isLiked && (
+                                <FavoriteIconBorder />
+                              )}
+                            </IconButton>
+                            <Typography component="p">
+                              {this.state.currentMedia.likeCount}
+                              {this.state.currentMedia.likeCount <= 1
+                                ? " Like"
+                                : " Likes"}
+                            </Typography>
+                          </CardActions>
                           {/*Add new comment */}
                           <div className="new-comment">
                             <FormControl style={{ flexGrow: 1 }}>
@@ -451,6 +480,33 @@ class Profile extends Component {
     this.setState({ comment: "" });
 
     //sets comments state in browser storage for futher use
+    localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
+  };
+
+  // Like handler, increase and decrease the like count and set like status
+  handleLike = (media) => {
+    const mediaData = [...this.state.mediaData];
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+
+    //do action based on isLiked state
+    if (mediaData[index].isLiked) {
+      mediaData[index].likeCount--;
+      mediaData[index].isLiked = false;
+
+      //for selected media state like in modals
+      media.isLiked = false;
+      media.likeCount--;
+    } else {
+      mediaData[index].likeCount++;
+      mediaData[index].isLiked = true;
+
+      //for selected media state like in modals
+      media.isLiked = true;
+      media.likeCount++;
+    }
+    this.setState({ mediaData });
+    //sets like state in browser storage for futher use
     localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
   };
 }
