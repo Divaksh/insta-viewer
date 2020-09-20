@@ -298,20 +298,20 @@ class Profile extends Component {
                       <div>
                         {/* Show all media caption*/}
                         <Typography component="p">
-                          <div className="post-caption">
+                          <span className="post-caption">
                             {this.state.currentMedia.caption.split("\n")[0]}
-                          </div>
+                          </span>
                         </Typography>
                         {/* Show all media hashtags*/}
                         <Typography component="p">
-                          <div className="post-tags">
+                          <span className="post-tags">
                             {this.state.currentMedia.caption
                               .split(" ")
                               .filter((v) => v.startsWith("#"))
                               .map((tag, index) => (
                                 <span key={index}>{tag + " "}</span>
                               ))}
-                          </div>
+                          </span>
                         </Typography>
                         {/* Show all comments*/}
                         <CardContent>
@@ -369,7 +369,7 @@ class Profile extends Component {
                               </InputLabel>
                               <Input
                                 id={"comment" + this.state.currentMedia.id}
-                                value={this.state.comment}
+                                value={this.state.comment || ""}
                                 onChange={this.commentChangeHandler}
                               />
                             </FormControl>
