@@ -177,7 +177,7 @@ class Home extends Component {
                 this.state.keyword === undefined ||
                 this.state.keyword === "" ||
                 media.caption.split("\n")[0].includes(this.state.keyword) ? (
-                  <Grid item xs={12} md={6} lg={6}>
+                  <Grid item xs={12} md={6} lg={6} key={media.id}>
                     <Card style={customStyles.fullHeight}>
                       <CardHeader
                         avatar={
@@ -208,19 +208,19 @@ class Home extends Component {
                         <br />
 
                         <Typography component="p">
-                          <div className="post-caption">
+                          <span className="post-caption">
                             {media.caption.split("\n")[0]}
-                          </div>
+                          </span>
                         </Typography>
                         <Typography component="p">
-                          <div className="post-tags">
+                          <span className="post-tags">
                             {media.caption
                               .split(" ")
                               .filter((v) => v.startsWith("#"))
                               .map((tag, index) => (
                                 <span key={index}>{tag + " "}</span>
                               ))}
-                          </div>
+                          </span>
                         </Typography>
                       </CardContent>
                       <CardActions>
