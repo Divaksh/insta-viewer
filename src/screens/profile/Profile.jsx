@@ -59,6 +59,8 @@ class Profile extends Component {
       closeNameEditModal: true,
       newName: "",
       nameRequired: false,
+      imageModalOpen: false,
+      currentMedia: null,
     };
   }
 
@@ -210,11 +212,105 @@ class Profile extends Component {
                       style={styles.media}
                       image={media.media_url}
                       title={media.caption != null ? media.caption.text : ""}
-                      onClick={this.handleOpenImageModal}
+                      onClick={this.handleOpenImageModal.bind(this, media)}
                     />
                   </GridListTile>
                 ))}
               </GridList>
+            )}
+
+            {this.state.currentMedia != null && (
+              <Modal
+                aria-labelledby="image-modal"
+                aria-describedby="modal to show image details"
+                open={this.state.imageModalOpen}
+                onClose={this.handleCloseImageModal}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    backgroundColor: "#fff",
+                    width: "70%",
+                    height: "70%",
+                  }}
+                >
+                  <div style={{ width: "50%", padding: 10 }}>
+                    <img
+                      style={{ height: "100%", width: "100%" }}
+                      src={this.state.currentMedia.media_url}
+                      alt={
+                        this.state.currentMedia.caption != null
+                          ? this.state.currentMedia.caption.text
+                          : ""
+                      }
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "50%",
+                      padding: 10,
+                    }}
+                  >
+                    <div
+                      style={{
+                        borderBottom: "2px solid #f2f2f2",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        alt="User Image"
+                        src={ProfilePic}
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          margin: "10px",
+                        }}
+                      />
+                      <Typography component="p">
+                        {this.state.username}
+                      </Typography>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        height: "100%",
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div>
+                        <Typography component="p">
+                          <div className="post-caption">
+                            {this.state.currentMedia.caption.split("\n")[0]}
+                          </div>
+                        </Typography>
+                        <Typography component="p">
+                          <div className="post-tags">
+                            {this.state.currentMedia.caption
+                              .split(" ")
+                              .filter((v) => v.startsWith("#"))
+                              .map((tag, index) => (
+                                <span key={index}>{tag + " "}</span>
+                              ))}
+                          </div>
+                        </Typography>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Modal>
             )}
           </Container>
         </div>
@@ -271,6 +367,14 @@ class Profile extends Component {
       openNameEditModal: false,
       closeNameEditModal: true,
     });
+  };
+
+  handleOpenImageModal = (media) => {
+    this.setState({ imageModalOpen: true, currentMedia: media });
+  };
+
+  handleCloseImageModal = () => {
+    this.setState({ imageModalOpen: false });
   };
 }
 
