@@ -3,7 +3,7 @@ import "./Home.css";
 import Header from "../../common/Header";
 import "../../common/Common.css";
 import axios from "axios";
-
+import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -34,9 +34,7 @@ import ProfilePic from "../../assets/ProfilePic.jpg";
 import Grid from "@material-ui/core/Grid";
 
 const customStyles = {
-  root: {
-    maxWidth: 345,
-  },
+  fullHeight: { height: "100%" },
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
@@ -54,9 +52,7 @@ const customStyles = {
   avatar: {
     backgroundColor: red[500],
   },
-  mainContainer: {
-    marginTop: 100,
-  },
+  mainContainer: {},
 };
 
 class Home extends Component {
@@ -167,7 +163,7 @@ class Home extends Component {
     return (
       <>
         <Header state={this.state} onSearch={this.handleSearch} />
-        <div className="mainContainer">
+        <Container maxWidth="lg" id="mainContainer">
           <Grid
             container
             spacing={2}
@@ -175,13 +171,13 @@ class Home extends Component {
             justify="flex-start"
             direction="row"
           >
-            <Grid item xs={6}>
-              {this.state.mediaData.map((media) =>
-                /* Show results only if, keyword is undefined, empty or contain perticular text */
-                this.state.keyword === undefined ||
-                this.state.keyword === "" ||
-                media.caption.split("\n")[0].includes(this.state.keyword) ? (
-                  <Card style={customStyles.root}>
+            {this.state.mediaData.map((media) =>
+              /* Show results only if, keyword is undefined, empty or contain perticular text */
+              this.state.keyword === undefined ||
+              this.state.keyword === "" ||
+              media.caption.split("\n")[0].includes(this.state.keyword) ? (
+                <Grid item xs={12} md={6} lg={6}>
+                  <Card style={customStyles.fullHeight}>
                     <CardHeader
                       avatar={
                         <Avatar
@@ -287,11 +283,11 @@ class Home extends Component {
                       </div>
                     </CardContent>
                   </Card>
-                ) : null
-              )}
-            </Grid>
+                </Grid>
+              ) : null
+            )}
           </Grid>
-        </div>
+        </Container>
       </>
     );
   }
