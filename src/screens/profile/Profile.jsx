@@ -29,7 +29,6 @@ import EditIcon from "@material-ui/icons/Edit";
 import CardMedia from "@material-ui/core/CardMedia";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
-import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 
 const styles = {
@@ -94,15 +93,21 @@ class Profile extends Component {
             ...this.state.mediaData,
             {
               ...media,
-              likeCount: homeMediaData.find((homeMedia) => {
-                return homeMedia.id === media.id && homeMedia;
-              }).likeCount,
-              isLiked: homeMediaData.find((homeMedia) => {
-                return homeMedia.id === media.id && homeMedia;
-              }).isLiked,
-              comments: homeMediaData.find((homeMedia) => {
-                return homeMedia.id === media.id && homeMedia;
-              }).comments,
+              likeCount:
+                homeMediaData !== null &&
+                homeMediaData.find((homeMedia) => {
+                  return homeMedia.id === media.id && homeMedia;
+                }).likeCount,
+              isLiked:
+                homeMediaData !== null &&
+                homeMediaData.find((homeMedia) => {
+                  return homeMedia.id === media.id && homeMedia;
+                }).isLiked,
+              comments:
+                homeMediaData !== null &&
+                homeMediaData.find((homeMedia) => {
+                  return homeMedia.id === media.id && homeMedia;
+                }).comments,
               comment: "",
             },
           ],
@@ -150,7 +155,8 @@ class Profile extends Component {
                     Follows: {this.state.follows && this.state.follows}
                   </Grid>
                   <Grid item xs={4}>
-                    Followed By: {this.state.followedby & this.state.followedby}
+                    Followed By:{" "}
+                    {this.state.followedby && this.state.followedby}
                   </Grid>
                 </Grid>
                 <Typography
@@ -235,24 +241,12 @@ class Profile extends Component {
                 aria-describedby="modal to show image details"
                 open={this.state.imageModalOpen}
                 onClose={this.handleCloseImageModal}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+                className="media-modal"
               >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    backgroundColor: "#fff",
-                    width: "70%",
-                    height: "70%",
-                  }}
-                >
-                  <div style={{ width: "50%", padding: 10 }}>
+                <div className="media-modal-container">
+                  <div className="media-modal-image">
                     <img
-                      style={{ height: "100%", width: "100%" }}
+                      className="media-modal-img"
                       src={this.state.currentMedia.media_url}
                       alt={
                         this.state.currentMedia.caption != null
@@ -262,70 +256,44 @@ class Profile extends Component {
                     />
                   </div>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      width: "50%",
-                      padding: 10,
-                    }}
-                  >
-                    <div
-                      style={{
-                        borderBottom: "2px solid #f2f2f2",
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "flex-start",
-                        alignItems: "center",
-                      }}
-                    >
+                  <div className="media-modal-content">
+                    <div className="media-modal-avatar-area">
                       <Avatar
                         alt="User Image"
                         src={ProfilePic}
-                        style={{
-                          width: "50px",
-                          height: "50px",
-                          margin: "10px",
-                        }}
+                        className="media-modal-avatar"
                       />
                       <Typography component="p">
                         {this.state.username}
                       </Typography>
                     </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        height: "100%",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div>
-                        {/* Show media caption*/}
-                        <Caption media={this.state.currentMedia} />
+                    <div className="media-modal-details">
+                      {/* Show media caption*/}
+                      <Caption media={this.state.currentMedia} />
 
-                        {/* Show all media hashtags*/}
-                        <Hashtags media={this.state.currentMedia} />
+                      {/* Show all media hashtags*/}
+                      <Hashtags media={this.state.currentMedia} />
 
-                        {/* Show all comments*/}
-                        <CardContent>
-                          <Comments media={this.state.currentMedia} />
-
-                          <CardActions>
-                            {/* Show like buttons with like counts */}
+                      {/* Show all comments*/}
+                      <Comments media={this.state.currentMedia} />
+                      <CardActions>
+                        {/* Show like buttons with like counts */}
+                        <div className="modal-footer">
+                          <div className="like-bottom">
                             <Like
                               media={this.state.currentMedia}
                               onLike={this.handleLike}
-                            ></Like>
-                          </CardActions>
+                            />
+                          </div>
+
                           {/*Add new comment */}
                           <AddComment
                             media={this.state.currentMedia}
                             onComment={this.handleComment}
                             onCommentChange={this.commentChangeHandler}
-                          ></AddComment>
-                        </CardContent>
-                      </div>
+                          />
+                        </div>
+                      </CardActions>
                     </div>
                   </div>
                 </div>

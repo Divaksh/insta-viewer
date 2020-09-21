@@ -9,10 +9,11 @@ This stateless functional component is responsible for the like related function
 */
 const Caption = ({ media, onLike }) => {
   return (
-    <>
+    <div className="row">
       <IconButton
         aria-label="Add to favorites"
         onClick={onLike.bind(this, media)}
+        style={{ padding: 2 }}
       >
         {media.isLiked && <FavoriteIconFill style={{ color: "#F44336" }} />}
         {!media.isLiked && <FavoriteIconBorder />}
@@ -21,7 +22,7 @@ const Caption = ({ media, onLike }) => {
         {media.likeCount}
         {media.likeCount <= 1 ? " Like" : " Likes"}
       </Typography>
-    </>
+    </div>
   );
 };
 

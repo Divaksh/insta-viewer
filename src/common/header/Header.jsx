@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
   hr: {
     height: "1.5px",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#9f9f9f",
     marginLeft: "5px",
     marginRight: "5px",
   },
@@ -153,7 +153,7 @@ const Header = ({ state, onSearch }) => {
                   horizontal: "left",
                 }}
               >
-                <div style={{ padding: "5px" }}>
+                <div className="account-menu">
                   {state.isHome && (
                     <div>
                       <MenuItem onClick={handleAccount}>My Account</MenuItem>

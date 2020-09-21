@@ -6,7 +6,7 @@ This stateless functional component is responsible for displaying all comments
 */
 const Comments = ({ media }) => {
   return (
-    <>
+    <div className="comments">
       {media.comments.length > 0 &&
         media.comments.map((comment, index) => {
           return (
@@ -24,7 +24,7 @@ const Comments = ({ media }) => {
             </div>
           );
         })}
-    </>
+    </div>
   );
 };
 

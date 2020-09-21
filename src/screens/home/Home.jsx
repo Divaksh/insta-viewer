@@ -71,6 +71,8 @@ class Home extends Component {
         ],
       })
     );
+    //sets like state in browser storage for futher use
+    localStorage.setItem("homeMediaData", JSON.stringify(this.state.mediaData));
   }
 
   // Convert post date to DD/MM/YYYY HH:MM:SS format
@@ -172,7 +174,10 @@ class Home extends Component {
                 /* Show results only if, keyword is undefined, empty or contain perticular text */
                 this.state.keyword === undefined ||
                 this.state.keyword === "" ||
-                media.caption.split("\n")[0].includes(this.state.keyword) ? (
+                media.caption
+                  .split("\n")[0]
+                  .toLowerCase()
+                  .includes(this.state.keyword.toLowerCase()) ? (
                   <Grid item xs={12} md={6} lg={6} key={media.id}>
                     <Card style={customStyles.fullHeight}>
                       <CardHeader
@@ -197,26 +202,24 @@ class Home extends Component {
 
                       <Divider variant="middle" className="divider" />
                       <CardContent>
-                        <br />
                         {/* Show media caption */}
                         <Caption media={media} />
                         {/* Show media hashtags */}
                         <Hashtags media={media} />
-                      </CardContent>
-                      <CardActions>
+
                         {/* Show like buttons with like counts */}
                         <Like media={media} onLike={this.handleLike}></Like>
-                      </CardActions>
-                      <CardContent>
                         {/* Show all comments*/}
                         <Comments media={media} />
+                      </CardContent>
+                      <CardActions style={{ padding: "15px" }}>
                         {/*Add new comment */}
                         <AddComment
                           media={media}
                           onComment={this.handleComment}
                           onCommentChange={this.commentChangeHandler}
                         ></AddComment>
-                      </CardContent>
+                      </CardActions>
                     </Card>
                   </Grid>
                 ) : null
