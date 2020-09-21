@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+//Local resources
 import "./Home.css";
 import Header from "../../common/header/Header";
 import Caption from "../../common/media/Caption";
@@ -10,6 +11,7 @@ import AddComment from "../../common/media/AddComment";
 import ProfilePic from "../../assets/ProfilePic.jpg";
 import "../../common/Common.css";
 
+//lib resources
 import axios from "axios";
 import Container from "@material-ui/core/Container";
 import Card from "@material-ui/core/Card";
@@ -30,20 +32,9 @@ const customStyles = {
     marginLeft: 10,
     paddingTop: "56.25%", // 16:9
   },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    // transition: theme.transitions.create("transform", {
-    //   duration: theme.transitions.duration.shortest,
-    // }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
   avatar: {
     backgroundColor: red[500],
   },
-  mainContainer: {},
 };
 
 class Home extends Component {
@@ -52,11 +43,10 @@ class Home extends Component {
     this.state = {
       isHome: true,
       mediaData: [],
-      commentRequired: false,
-      comment: "",
     };
   }
 
+  //Get data from the API and set it to state
   async componentDidMount() {
     const accessToken = window.sessionStorage.getItem("access-token");
     const endPoint = this.props.apiDetails.mediaList + accessToken;
@@ -76,6 +66,7 @@ class Home extends Component {
             comments: [],
             comment: "",
             keyword: "",
+            commentRequired: false,
           },
         ],
       })
@@ -129,11 +120,8 @@ class Home extends Component {
     localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
   };
 
+  //Handles comment state for the individual comment
   commentChangeHandler = (e) => {
-    this.setState({
-      comment: e.target.value,
-      commentRequired: false,
-    });
     const mediaData = [...this.state.mediaData];
     const media = mediaData.find((element) => {
       return element.id === e.target.name && element;
@@ -141,21 +129,20 @@ class Home extends Component {
     const index = mediaData.indexOf(media);
     mediaData[index] = { ...media };
     mediaData[index].comment = e.target.value;
+    mediaData[index].commentRequired = false;
     this.setState({ mediaData });
   };
 
-  // adds new comment and update the state with new comments
+  // Adds new comment and update the state with new comments
   handleComment = (media) => {
-    if (this.state.comment === "" || this.state.comment === undefined) {
-      this.setState({
-        commentRequired: true,
-        comment: "",
-      });
+    const mediaData = [...this.state.mediaData];
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+    if (media.comment === "" || media.comment === undefined) {
+      mediaData[index].commentRequired = true;
+      this.setState({ mediaData });
     } else {
-      const comment = this.state.comment;
-      const mediaData = [...this.state.mediaData];
-      const index = mediaData.indexOf(media);
-      mediaData[index] = { ...media };
+      const comment = media.comment;
       mediaData[index].comments.push(comment);
       mediaData[index].comment = ""; //set current back to empty
       this.setState({ mediaData });
@@ -201,6 +188,7 @@ class Home extends Component {
                         title={media.username}
                         subheader={this.covertDateTime(media.timestamp)}
                       />
+                      {/* Show media*/}
                       <CardMedia
                         style={customStyles.media}
                         image={media.media_url}
@@ -210,25 +198,22 @@ class Home extends Component {
                       <Divider variant="middle" className="divider" />
                       <CardContent>
                         <br />
-
+                        {/* Show media caption */}
                         <Caption media={media} />
-
+                        {/* Show media hashtags */}
                         <Hashtags media={media} />
                       </CardContent>
                       <CardActions>
                         {/* Show like buttons with like counts */}
                         <Like media={media} onLike={this.handleLike}></Like>
                       </CardActions>
-
-                      {/* Show all comments*/}
                       <CardContent>
+                        {/* Show all comments*/}
                         <Comments media={media} />
-
                         {/*Add new comment */}
                         <AddComment
                           media={media}
                           onComment={this.handleComment}
-                          state={this.state}
                           onCommentChange={this.commentChangeHandler}
                         ></AddComment>
                       </CardContent>

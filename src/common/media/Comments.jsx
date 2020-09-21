@@ -1,6 +1,9 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 
+/*
+This stateless functional component is responsible for displaying all comments
+*/
 const Comments = ({ media }) => {
   return (
     <>

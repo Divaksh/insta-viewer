@@ -19,6 +19,7 @@ export default function Controller() {
 
   return (
     <Switch>
+      {/* if path is /profile and user is logged in then load Profile component with apiDetials props */}
       <Route
         path="/profile"
         render={() =>
@@ -30,6 +31,7 @@ export default function Controller() {
         }
       />
 
+      {/* if path is /home and user is logged in then load Home component with apiDetials props */}
       <Route
         path="/home"
         render={() =>
@@ -41,20 +43,24 @@ export default function Controller() {
         }
       />
 
+      {/* if path is /login and user is logged in then redirect user to the home */}
       <Route
         path="/login"
         exact
         render={() => (isLoggedIn() ? <Redirect to="/home" /> : <Login />)}
       />
 
+      {/* if path is /not-found then route to the 404 not found component  */}
       <Route path="/not-found" component={NotFound} />
 
+      {/* if path is / and user is not logged in then load login component  */}
       <Route
         path="/"
         exact
         render={() => (isLoggedIn() ? <Redirect to="/home" /> : <Login />)}
       />
 
+      {/* if path does not exist then redirect user to /not-found */}
       <Redirect to="/not-found" />
     </Switch>
   );

@@ -1,16 +1,19 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router";
+
+// Local resources
 import Header from "../../common/header/Header";
 import Caption from "../../common/media/Caption";
 import Hashtags from "../../common/media/Hashtags";
 import Like from "../../common/media/Like";
 import Comments from "../../common/media/Comments";
-
+import AddComment from "../../common/media/AddComment";
+import ProfilePic from "../../assets/ProfilePic.jpg";
 import "../../common/Common.css";
 import "./Profile.css";
-import { withRouter } from "react-router";
-import axios from "axios";
-import ProfilePic from "../../assets/ProfilePic.jpg";
 
+//External resources
+import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
@@ -71,6 +74,7 @@ class Profile extends Component {
     };
   }
 
+  //Calls the API and sets the state based on response and local storage
   async componentDidMount() {
     const accessToken = window.sessionStorage.getItem("access-token");
     const endPoint = this.props.apiDetails.mediaList + accessToken;
@@ -140,14 +144,13 @@ class Profile extends Component {
                 </Typography>
                 <Grid container spacing={3} justify="center">
                   <Grid item xs={4}>
-                    Posts: {this.state.posts ? this.state.posts : null}
+                    Posts: {this.state.posts && this.state.posts}
                   </Grid>
                   <Grid item xs={4}>
-                    Follows: {this.state.follows ? this.state.follows : null}
+                    Follows: {this.state.follows && this.state.follows}
                   </Grid>
                   <Grid item xs={4}>
-                    Followed By:{" "}
-                    {this.state.followedby ? this.state.followedby : null}
+                    Followed By: {this.state.followedby & this.state.followedby}
                   </Grid>
                 </Grid>
                 <Typography
@@ -192,7 +195,7 @@ class Profile extends Component {
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={this.onUpdateName}
+                        onClick={this.handleUpdateName}
                       >
                         UPDATE
                       </Button>
@@ -316,32 +319,11 @@ class Profile extends Component {
                             ></Like>
                           </CardActions>
                           {/*Add new comment */}
-                          <div className="new-comment">
-                            <FormControl style={{ flexGrow: 1 }}>
-                              <InputLabel htmlFor="comment">
-                                Add Comment
-                              </InputLabel>
-                              <Input
-                                id={"comment" + this.state.currentMedia.id}
-                                value={this.state.comment || ""}
-                                onChange={this.commentChangeHandler}
-                              />
-                            </FormControl>
-                            <div className="add-comment-btn">
-                              <FormControl>
-                                <Button
-                                  onClick={this.handleComment.bind(
-                                    this,
-                                    this.state.currentMedia
-                                  )}
-                                  variant="contained"
-                                  color="primary"
-                                >
-                                  ADD
-                                </Button>
-                              </FormControl>
-                            </div>
-                          </div>
+                          <AddComment
+                            media={this.state.currentMedia}
+                            onComment={this.handleComment}
+                            onCommentChange={this.commentChangeHandler}
+                          ></AddComment>
                         </CardContent>
                       </div>
                     </div>
@@ -355,6 +337,7 @@ class Profile extends Component {
     );
   }
 
+  //Modal open handler
   openEditNameModal = () => {
     this.setState({
       openNameEditModal: true,
@@ -362,6 +345,7 @@ class Profile extends Component {
     });
   };
 
+  //Modal close handler
   closeEditNameModal = () => {
     this.setState({
       openNameEditModal: false,
@@ -369,6 +353,7 @@ class Profile extends Component {
     });
   };
 
+  //Tracks the name change and handles the validation for the same
   onChangeEditName = (e) => {
     if (e.target.value === "") {
       this.setState({ newName: e.target.value, nameRequired: true });
@@ -377,7 +362,8 @@ class Profile extends Component {
     }
   };
 
-  onUpdateName = () => {
+  //Updates the name into state when submits the button
+  handleUpdateName = () => {
     if (this.state.newName.trim() === "") {
       this.setState({
         nameRequired: true,
@@ -392,6 +378,7 @@ class Profile extends Component {
     }
   };
 
+  //Open name modal handeler
   openEditNameModal = () => {
     this.setState({
       openNameEditModal: true,
@@ -399,6 +386,7 @@ class Profile extends Component {
     });
   };
 
+  //Sets the openNameEditModal state to false and closeNameEditModal to true
   closeEditNameModal = () => {
     this.setState({
       openNameEditModal: false,
@@ -406,35 +394,54 @@ class Profile extends Component {
     });
   };
 
+  // Sets the imageModalOpen state to true and sets the current media with the media
   handleOpenImageModal = (media) => {
     this.setState({ imageModalOpen: true, currentMedia: media });
   };
 
+  // Sets the imageModalOpen state to false
   handleCloseImageModal = () => {
     this.setState({ imageModalOpen: false });
   };
 
+  //Handles comment state for the individual comment
   commentChangeHandler = (e) => {
-    this.setState({ comment: e.target.value });
+    const mediaData = [...this.state.mediaData];
+    const media = mediaData.find((element) => {
+      return element.id === e.target.name && element;
+    });
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+    mediaData[index].comment = e.target.value;
+    mediaData[index].commentRequired = false;
+    //Set currentMedia state so change can reflect in the input box
+    this.setState({ currentMedia: mediaData[index] });
+    //Set the mediaData state
+    this.setState({ mediaData });
   };
 
-  // adds new comment and update the state with new comments
+  // Adds new comment and update the state with new comments
   handleComment = (media) => {
-    if (this.state.comment === "" || typeof this.state.comment === undefined) {
-      return;
-    }
-    const comment = this.state.comment;
     const mediaData = [...this.state.mediaData];
     const index = mediaData.indexOf(media);
     mediaData[index] = { ...media };
-    mediaData[index].comments.push(comment);
-    this.setState({ mediaData });
+    if (media.comment === "" || media.comment === undefined) {
+      mediaData[index].commentRequired = true;
+      this.setState({ mediaData });
+      //sets comment state back to the empty when comment is posted
+      this.setState({ currentMedia: mediaData[index] });
+    } else {
+      const comment = media.comment;
+      mediaData[index].comments.push(comment);
+      mediaData[index].comment = ""; //set current back to empty
+      this.setState({ mediaData });
 
-    //sets comment state back to the empty when comment is posted
-    this.setState({ comment: "" });
+      //sets comment state back to the empty when comment is posted
+      this.setState({ currentMedia: mediaData[index] });
 
-    //sets comments state in browser storage for futher use
-    localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
+      //sets comments state in browser storage for futher use
+      localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
+    }
   };
 
   // Like handler, increase and decrease the like count and set like status

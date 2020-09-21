@@ -5,7 +5,10 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-const AddComment = ({ media, onComment, state, onCommentChange }) => {
+/*
+This stateless functional component is responsible for the add new comment functionlity
+*/
+const AddComment = ({ media, onComment, onCommentChange }) => {
   return (
     <>
       <div className="new-comment">
@@ -19,7 +22,7 @@ const AddComment = ({ media, onComment, state, onCommentChange }) => {
           />
         </FormControl>
         <div className="add-comment-btn">
-          {state.commentRequired ? (
+          {media.commentRequired ? (
             <FormHelperText>
               <span style={{ color: "red" }}>required</span>
             </FormHelperText>

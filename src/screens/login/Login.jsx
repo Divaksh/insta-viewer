@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 
+//local resources
 import "./Login.css";
 import Header from "../../common/header/Header";
 
+//Other resources
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
@@ -112,6 +114,7 @@ class Login extends Component {
     );
   }
 
+  // Reacts on the input box changes
   inputBoxChangeHandler = (e) => {
     if (e.target.name === "username") {
       //check the event's input field name
@@ -137,6 +140,7 @@ class Login extends Component {
     }
   }; // End inputBoxChangeHandler
 
+  //Handles the login button
   loginButtonHandler = () => {
     const username = this.state.username;
     const password = this.state.password;
@@ -159,6 +163,7 @@ class Login extends Component {
     }
   };
 
+  //Validate the username and password and create session
   validateUser = (username, password) => {
     if (
       username === userPassport.username &&

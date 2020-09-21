@@ -4,6 +4,9 @@ import IconButton from "@material-ui/core/IconButton";
 import FavoriteIconBorder from "@material-ui/icons/FavoriteBorder";
 import FavoriteIconFill from "@material-ui/icons/Favorite";
 
+/*
+This stateless functional component is responsible for the like related functionlity
+*/
 const Caption = ({ media, onLike }) => {
   return (
     <>

@@ -65,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
+This stateless functional component is responsible for the header functionlity
+*/
 const Header = ({ state, onSearch }) => {
   //store custom Styles in classes
   const classes = useStyles();
@@ -75,6 +78,7 @@ const Header = ({ state, onSearch }) => {
     setAnchorEl(event.currentTarget);
   };
 
+  //Send user to the profile page along with the state
   const handleAccount = () => {
     history.push({
       pathname: "/profile",
@@ -82,8 +86,10 @@ const Header = ({ state, onSearch }) => {
     });
   };
 
+  //Logout handler to terminate user session and local storage
   const handleLogout = () => {
     window.sessionStorage.removeItem("access-token");
+    window.localStorage.removeItem("homeMediaData");
     history.push("/login");
   };
 
