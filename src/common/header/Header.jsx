@@ -1,5 +1,7 @@
 import React from "react";
 import "./Header.css";
+import ProfilePic from "../../assets/ProfilePic.jpg";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import InputBase from "@material-ui/core/InputBase";
@@ -10,12 +12,9 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
-import ProfilePic from "../assets/ProfilePic.jpg";
 import { useHistory } from "react-router-dom";
-import { ColorLensOutlined } from "@material-ui/icons";
 
 // Custom Styles to over ride material ui default styles
-
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,

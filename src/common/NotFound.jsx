@@ -1,7 +1,7 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Header from "./Header";
+import Header from "./header/Header";
 
 const useStyles = makeStyles({
   root: {

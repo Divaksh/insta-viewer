@@ -1,42 +1,33 @@
 import React, { Component } from "react";
+
 import "./Home.css";
-import Header from "../../common/Header";
+import Header from "../../common/header/Header";
+import Caption from "../../common/media/Caption";
+import Hashtags from "../../common/media/Hashtags";
+import Like from "../../common/media/Like";
+import Comments from "../../common/media/Comments";
+import AddComment from "../../common/media/AddComment";
+import ProfilePic from "../../assets/ProfilePic.jpg";
 import "../../common/Common.css";
+
 import axios from "axios";
 import Container from "@material-ui/core/Container";
-import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import FavoriteIconBorder from "@material-ui/icons/FavoriteBorder";
-import FavoriteIconFill from "@material-ui/icons/Favorite";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 import Divider from "@material-ui/core/Divider";
-
-import ProfilePic from "../../assets/ProfilePic.jpg";
-
 import Grid from "@material-ui/core/Grid";
 
 const customStyles = {
   fullHeight: { height: "100%" },
   media: {
     height: 0,
+    marginRight: 10,
+    marginLeft: 10,
     paddingTop: "56.25%", // 16:9
   },
   expand: {
@@ -61,6 +52,8 @@ class Home extends Component {
     this.state = {
       isHome: true,
       mediaData: [],
+      commentRequired: false,
+      comment: "",
     };
   }
 
@@ -137,26 +130,42 @@ class Home extends Component {
   };
 
   commentChangeHandler = (e) => {
-    this.setState({ comment: e.target.value });
+    this.setState({
+      comment: e.target.value,
+      commentRequired: false,
+    });
+    const mediaData = [...this.state.mediaData];
+    const media = mediaData.find((element) => {
+      return element.id === e.target.name && element;
+    });
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+    mediaData[index].comment = e.target.value;
+    this.setState({ mediaData });
   };
 
   // adds new comment and update the state with new comments
   handleComment = (media) => {
-    if (this.state.comment === "" || typeof this.state.comment === undefined) {
-      return;
+    if (this.state.comment === "" || this.state.comment === undefined) {
+      this.setState({
+        commentRequired: true,
+        comment: "",
+      });
+    } else {
+      const comment = this.state.comment;
+      const mediaData = [...this.state.mediaData];
+      const index = mediaData.indexOf(media);
+      mediaData[index] = { ...media };
+      mediaData[index].comments.push(comment);
+      mediaData[index].comment = ""; //set current back to empty
+      this.setState({ mediaData });
+
+      //sets comment state back to the empty when comment is posted
+      this.setState({ comment: "" });
+
+      //sets comments state in browser storage for futher use
+      localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
     }
-    const comment = this.state.comment;
-    const mediaData = [...this.state.mediaData];
-    const index = mediaData.indexOf(media);
-    mediaData[index] = { ...media };
-    mediaData[index].comments.push(comment);
-    this.setState({ mediaData });
-
-    //sets comment state back to the empty when comment is posted
-    this.setState({ comment: "" });
-
-    //sets comments state in browser storage for futher use
-    localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
   };
 
   render() {
@@ -186,13 +195,8 @@ class Home extends Component {
                             style={customStyles.avatar}
                             src={ProfilePic}
                           >
-                            R
+                            D
                           </Avatar>
-                        }
-                        action={
-                          <IconButton aria-label="settings">
-                            <MoreVertIcon />
-                          </IconButton>
                         }
                         title={media.username}
                         subheader={this.covertDateTime(media.timestamp)}
@@ -207,83 +211,26 @@ class Home extends Component {
                       <CardContent>
                         <br />
 
-                        <Typography component="p">
-                          <span className="post-caption">
-                            {media.caption.split("\n")[0]}
-                          </span>
-                        </Typography>
-                        <Typography component="p">
-                          <span className="post-tags">
-                            {media.caption
-                              .split(" ")
-                              .filter((v) => v.startsWith("#"))
-                              .map((tag, index) => (
-                                <span key={index}>{tag + " "}</span>
-                              ))}
-                          </span>
-                        </Typography>
+                        <Caption media={media} />
+
+                        <Hashtags media={media} />
                       </CardContent>
                       <CardActions>
                         {/* Show like buttons with like counts */}
-                        <IconButton
-                          aria-label="Add to favorites"
-                          onClick={this.handleLike.bind(this, media)}
-                        >
-                          {media.isLiked && (
-                            <FavoriteIconFill style={{ color: "#F44336" }} />
-                          )}
-                          {!media.isLiked && <FavoriteIconBorder />}
-                        </IconButton>
-                        <Typography component="p">
-                          {media.likeCount}
-                          {media.likeCount <= 1 ? " Like" : " Likes"}
-                        </Typography>
+                        <Like media={media} onLike={this.handleLike}></Like>
                       </CardActions>
 
                       {/* Show all comments*/}
                       <CardContent>
-                        {media.comments.length > 0 &&
-                          media.comments.map((comment, index) => {
-                            return (
-                              <div key={index} className="row">
-                                <Typography
-                                  component="p"
-                                  style={{
-                                    fontWeight: "bold",
-                                    paddingRight: "5px",
-                                  }}
-                                >
-                                  {media.username}:
-                                </Typography>
-                                <Typography component="p">{comment}</Typography>
-                              </div>
-                            );
-                          })}
+                        <Comments media={media} />
 
                         {/*Add new comment */}
-                        <div className="new-comment">
-                          <FormControl style={{ flexGrow: 1 }}>
-                            <InputLabel htmlFor="comment">
-                              Add Comment
-                            </InputLabel>
-                            <Input
-                              id={"comment" + media.id}
-                              value={this.state.comment}
-                              onChange={this.commentChangeHandler}
-                            />
-                          </FormControl>
-                          <div className="add-comment-btn">
-                            <FormControl>
-                              <Button
-                                onClick={this.handleComment.bind(this, media)}
-                                variant="contained"
-                                color="primary"
-                              >
-                                ADD
-                              </Button>
-                            </FormControl>
-                          </div>
-                        </div>
+                        <AddComment
+                          media={media}
+                          onComment={this.handleComment}
+                          state={this.state}
+                          onCommentChange={this.commentChangeHandler}
+                        ></AddComment>
                       </CardContent>
                     </Card>
                   </Grid>

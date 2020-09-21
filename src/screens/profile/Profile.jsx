@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import Header from "../../common/Header";
+import Header from "../../common/header/Header";
+import Caption from "../../common/media/Caption";
+import Hashtags from "../../common/media/Hashtags";
+import Like from "../../common/media/Like";
+import Comments from "../../common/media/Comments";
+
 import "../../common/Common.css";
 import "./Profile.css";
 import { withRouter } from "react-router";
@@ -22,9 +27,6 @@ import CardMedia from "@material-ui/core/CardMedia";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import CardContent from "@material-ui/core/CardContent";
-import IconButton from "@material-ui/core/IconButton";
-import FavoriteIconBorder from "@material-ui/icons/FavoriteBorder";
-import FavoriteIconFill from "@material-ui/icons/Favorite";
 import CardActions from "@material-ui/core/CardActions";
 
 const styles = {
@@ -89,13 +91,13 @@ class Profile extends Component {
             {
               ...media,
               likeCount: homeMediaData.find((homeMedia) => {
-                if (homeMedia.id === media.id) return homeMedia;
+                return homeMedia.id === media.id && homeMedia;
               }).likeCount,
               isLiked: homeMediaData.find((homeMedia) => {
-                if (homeMedia.id === media.id) return homeMedia;
+                return homeMedia.id === media.id && homeMedia;
               }).isLiked,
               comments: homeMediaData.find((homeMedia) => {
-                if (homeMedia.id === media.id) return homeMedia;
+                return homeMedia.id === media.id && homeMedia;
               }).comments,
               comment: "",
             },
@@ -296,70 +298,22 @@ class Profile extends Component {
                       }}
                     >
                       <div>
-                        {/* Show all media caption*/}
-                        <Typography component="p">
-                          <span className="post-caption">
-                            {this.state.currentMedia.caption.split("\n")[0]}
-                          </span>
-                        </Typography>
+                        {/* Show media caption*/}
+                        <Caption media={this.state.currentMedia} />
+
                         {/* Show all media hashtags*/}
-                        <Typography component="p">
-                          <span className="post-tags">
-                            {this.state.currentMedia.caption
-                              .split(" ")
-                              .filter((v) => v.startsWith("#"))
-                              .map((tag, index) => (
-                                <span key={index}>{tag + " "}</span>
-                              ))}
-                          </span>
-                        </Typography>
+                        <Hashtags media={this.state.currentMedia} />
+
                         {/* Show all comments*/}
                         <CardContent>
-                          {this.state.currentMedia.comments.length > 0 &&
-                            this.state.currentMedia.comments.map(
-                              (comment, index) => {
-                                return (
-                                  <div key={index} className="row">
-                                    <Typography
-                                      component="p"
-                                      style={{
-                                        fontWeight: "bold",
-                                        paddingRight: "5px",
-                                      }}
-                                    >
-                                      {this.state.currentMedia.username}:
-                                    </Typography>
-                                    <Typography component="p">
-                                      {comment}
-                                    </Typography>
-                                  </div>
-                                );
-                              }
-                            )}
+                          <Comments media={this.state.currentMedia} />
+
                           <CardActions>
                             {/* Show like buttons with like counts */}
-                            <IconButton
-                              aria-label="Add to favorites"
-                              onClick={this.handleLike.bind(
-                                this,
-                                this.state.currentMedia
-                              )}
-                            >
-                              {this.state.currentMedia.isLiked && (
-                                <FavoriteIconFill
-                                  style={{ color: "#F44336" }}
-                                />
-                              )}
-                              {!this.state.currentMedia.isLiked && (
-                                <FavoriteIconBorder />
-                              )}
-                            </IconButton>
-                            <Typography component="p">
-                              {this.state.currentMedia.likeCount}
-                              {this.state.currentMedia.likeCount <= 1
-                                ? " Like"
-                                : " Likes"}
-                            </Typography>
+                            <Like
+                              media={this.state.currentMedia}
+                              onLike={this.handleLike}
+                            ></Like>
                           </CardActions>
                           {/*Add new comment */}
                           <div className="new-comment">
