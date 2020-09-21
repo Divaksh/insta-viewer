@@ -2,3 +2,13 @@
   margin-top: 100px;
   width: 100%;
 }
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.comments {
+  padding-top: 10px;
+}

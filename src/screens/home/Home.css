@@ -9,11 +9,6 @@
   margin-left: 10px;
 }
 
-.row {
-  display: flex;
-  flex-direction: row;
-}
-
 .divider {
   margin-top: 10px !important;
   padding-top: 1px;
@@ -21,8 +16,6 @@
 }
 
 .post-caption {
-  overflow: hidden;
-  text-overflow: clip;
   margin-top: 5px;
 }
 

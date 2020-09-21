@@ -1,61 +1,39 @@
 import React, { Component } from "react";
-import "./Home.css";
-import Header from "../../common/Header";
-import "../../common/Common.css";
-import axios from "axios";
 
-import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
+//Local resources
+import "./Home.css";
+import Header from "../../common/header/Header";
+import Caption from "../../common/media/Caption";
+import Hashtags from "../../common/media/Hashtags";
+import Like from "../../common/media/Like";
+import Comments from "../../common/media/Comments";
+import AddComment from "../../common/media/AddComment";
+import ProfilePic from "../../assets/ProfilePic.jpg";
+import "../../common/Common.css";
+
+//lib resources
+import axios from "axios";
+import Container from "@material-ui/core/Container";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import FavoriteIconBorder from "@material-ui/icons/FavoriteBorder";
-import FavoriteIconFill from "@material-ui/icons/Favorite";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 import Divider from "@material-ui/core/Divider";
-
-import ProfilePic from "../../assets/ProfilePic.jpg";
-
 import Grid from "@material-ui/core/Grid";
 
 const customStyles = {
-  root: {
-    maxWidth: 345,
-  },
+  fullHeight: { height: "100%" },
   media: {
     height: 0,
+    marginRight: 10,
+    marginLeft: 10,
     paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    // transition: theme.transitions.create("transform", {
-    //   duration: theme.transitions.duration.shortest,
-    // }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
   },
   avatar: {
     backgroundColor: red[500],
-  },
-  mainContainer: {
-    marginTop: 100,
   },
 };
 
@@ -68,6 +46,7 @@ class Home extends Component {
     };
   }
 
+  //Get data from the API and set it to state
   async componentDidMount() {
     const accessToken = window.sessionStorage.getItem("access-token");
     const endPoint = this.props.apiDetails.mediaList + accessToken;
@@ -87,10 +66,13 @@ class Home extends Component {
             comments: [],
             comment: "",
             keyword: "",
+            commentRequired: false,
           },
         ],
       })
     );
+    //sets like state in browser storage for futher use
+    localStorage.setItem("homeMediaData", JSON.stringify(this.state.mediaData));
   }
 
   // Convert post date to DD/MM/YYYY HH:MM:SS format
@@ -140,27 +122,39 @@ class Home extends Component {
     localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
   };
 
+  //Handles comment state for the individual comment
   commentChangeHandler = (e) => {
-    this.setState({ comment: e.target.value });
+    const mediaData = [...this.state.mediaData];
+    const media = mediaData.find((element) => {
+      return element.id === e.target.name && element;
+    });
+    const index = mediaData.indexOf(media);
+    mediaData[index] = { ...media };
+    mediaData[index].comment = e.target.value;
+    mediaData[index].commentRequired = false;
+    this.setState({ mediaData });
   };
 
-  // adds new comment and update the state with new comments
+  // Adds new comment and update the state with new comments
   handleComment = (media) => {
-    if (this.state.comment === "" || typeof this.state.comment === undefined) {
-      return;
-    }
-    const comment = this.state.comment;
     const mediaData = [...this.state.mediaData];
     const index = mediaData.indexOf(media);
     mediaData[index] = { ...media };
-    mediaData[index].comments.push(comment);
-    this.setState({ mediaData });
+    if (media.comment === "" || media.comment === undefined) {
+      mediaData[index].commentRequired = true;
+      this.setState({ mediaData });
+    } else {
+      const comment = media.comment;
+      mediaData[index].comments.push(comment);
+      mediaData[index].comment = ""; //set current back to empty
+      this.setState({ mediaData });
 
-    //sets comment state back to the empty when comment is posted
-    this.setState({ comment: "" });
+      //sets comment state back to the empty when comment is posted
+      this.setState({ comment: "" });
 
-    //sets comments state in browser storage for futher use
-    localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
+      //sets comments state in browser storage for futher use
+      localStorage.setItem("homeMediaData", JSON.stringify(mediaData));
+    }
   };
 
   render() {
@@ -168,129 +162,70 @@ class Home extends Component {
       <>
         <Header state={this.state} onSearch={this.handleSearch} />
         <div className="mainContainer">
-          <Grid
-            container
-            spacing={2}
-            alignContent="center"
-            justify="flex-start"
-            direction="row"
-          >
-            <Grid item xs={6}>
+          <Container maxWidth="lg">
+            <Grid
+              container
+              spacing={2}
+              alignContent="center"
+              justify="flex-start"
+              direction="row"
+            >
               {this.state.mediaData.map((media) =>
                 /* Show results only if, keyword is undefined, empty or contain perticular text */
                 this.state.keyword === undefined ||
                 this.state.keyword === "" ||
-                media.caption.split("\n")[0].includes(this.state.keyword) ? (
-                  <Card style={customStyles.root}>
-                    <CardHeader
-                      avatar={
-                        <Avatar
-                          aria-label="recipe"
-                          style={customStyles.avatar}
-                          src={ProfilePic}
-                        >
-                          R
-                        </Avatar>
-                      }
-                      action={
-                        <IconButton aria-label="settings">
-                          <MoreVertIcon />
-                        </IconButton>
-                      }
-                      title={media.username}
-                      subheader={this.covertDateTime(media.timestamp)}
-                    />
-                    <CardMedia
-                      style={customStyles.media}
-                      image={media.media_url}
-                      title={media.caption}
-                    />
+                media.caption
+                  .split("\n")[0]
+                  .toLowerCase()
+                  .includes(this.state.keyword.toLowerCase()) ? (
+                  <Grid item xs={12} md={6} lg={6} key={media.id}>
+                    <Card style={customStyles.fullHeight}>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            aria-label="recipe"
+                            style={customStyles.avatar}
+                            src={ProfilePic}
+                          >
+                            D
+                          </Avatar>
+                        }
+                        title={media.username}
+                        subheader={this.covertDateTime(media.timestamp)}
+                      />
+                      {/* Show media*/}
+                      <CardMedia
+                        style={customStyles.media}
+                        image={media.media_url}
+                        title={media.caption}
+                      />
 
-                    <Divider variant="middle" className="divider" />
-                    <CardContent>
-                      <br />
+                      <Divider variant="middle" className="divider" />
+                      <CardContent>
+                        {/* Show media caption */}
+                        <Caption media={media} />
+                        {/* Show media hashtags */}
+                        <Hashtags media={media} />
 
-                      <Typography component="p">
-                        <div className="post-caption">
-                          {media.caption.split("\n")[0]}
-                        </div>
-                      </Typography>
-                      <Typography component="p">
-                        <div className="post-tags">
-                          {media.caption
-                            .split(" ")
-                            .filter((v) => v.startsWith("#"))
-                            .map((tag, index) => (
-                              <span key={index}>{tag + " "}</span>
-                            ))}
-                        </div>
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      {/* Show like buttons with like counts */}
-                      <IconButton
-                        aria-label="Add to favorites"
-                        onClick={this.handleLike.bind(this, media)}
-                      >
-                        {media.isLiked && (
-                          <FavoriteIconFill style={{ color: "#F44336" }} />
-                        )}
-                        {!media.isLiked && <FavoriteIconBorder />}
-                      </IconButton>
-                      <Typography component="p">
-                        {media.likeCount}
-                        {media.likeCount <= 1 ? " Like" : " Likes"}
-                      </Typography>
-                    </CardActions>
-
-                    {/* Show all comments*/}
-                    <CardContent>
-                      {media.comments.length > 0 &&
-                        media.comments.map((comment, index) => {
-                          return (
-                            <div key={index} className="row">
-                              <Typography
-                                component="p"
-                                style={{
-                                  fontWeight: "bold",
-                                  paddingRight: "5px",
-                                }}
-                              >
-                                {media.username}:
-                              </Typography>
-                              <Typography component="p">{comment}</Typography>
-                            </div>
-                          );
-                        })}
-
-                      {/*Add new comment */}
-                      <div className="new-comment">
-                        <FormControl style={{ flexGrow: 1 }}>
-                          <InputLabel htmlFor="comment">Add Comment</InputLabel>
-                          <Input
-                            id={"comment" + media.id}
-                            value={this.state.comment}
-                            onChange={this.commentChangeHandler}
-                          />
-                        </FormControl>
-                        <div className="add-comment-btn">
-                          <FormControl>
-                            <Button
-                              onClick={this.handleComment.bind(this, media)}
-                              variant="contained"
-                              color="primary"
-                            >
-                              ADD
-                            </Button>
-                          </FormControl>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                        {/* Show like buttons with like counts */}
+                        <Like media={media} onLike={this.handleLike}></Like>
+                        {/* Show all comments*/}
+                        <Comments media={media} />
+                      </CardContent>
+                      <CardActions style={{ padding: "15px" }}>
+                        {/*Add new comment */}
+                        <AddComment
+                          media={media}
+                          onComment={this.handleComment}
+                          onCommentChange={this.commentChangeHandler}
+                        ></AddComment>
+                      </CardActions>
+                    </Card>
+                  </Grid>
                 ) : null
               )}
             </Grid>
-          </Grid>
+          </Container>
         </div>
       </>
     );

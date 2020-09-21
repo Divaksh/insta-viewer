@@ -1,5 +1,7 @@
 import React from "react";
 import "./Header.css";
+import ProfilePic from "../../assets/ProfilePic.jpg";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import InputBase from "@material-ui/core/InputBase";
@@ -10,12 +12,9 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import Popover from "@material-ui/core/Popover";
 import { Link } from "react-router-dom";
-import ProfilePic from "../assets/ProfilePic.jpg";
 import { useHistory } from "react-router-dom";
-import { ColorLensOutlined } from "@material-ui/icons";
 
 // Custom Styles to over ride material ui default styles
-
 const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
@@ -60,12 +59,15 @@ const useStyles = makeStyles((theme) => ({
   },
   hr: {
     height: "1.5px",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#9f9f9f",
     marginLeft: "5px",
     marginRight: "5px",
   },
 }));
 
+/*
+This stateless functional component is responsible for the header functionlity
+*/
 const Header = ({ state, onSearch }) => {
   //store custom Styles in classes
   const classes = useStyles();
@@ -76,6 +78,7 @@ const Header = ({ state, onSearch }) => {
     setAnchorEl(event.currentTarget);
   };
 
+  //Send user to the profile page along with the state
   const handleAccount = () => {
     history.push({
       pathname: "/profile",
@@ -83,8 +86,10 @@ const Header = ({ state, onSearch }) => {
     });
   };
 
+  //Logout handler to terminate user session and local storage
   const handleLogout = () => {
     window.sessionStorage.removeItem("access-token");
+    window.localStorage.removeItem("homeMediaData");
     history.push("/login");
   };
 
@@ -148,7 +153,7 @@ const Header = ({ state, onSearch }) => {
                   horizontal: "left",
                 }}
               >
-                <div style={{ padding: "5px" }}>
+                <div className="account-menu">
                   {state.isHome && (
                     <div>
                       <MenuItem onClick={handleAccount}>My Account</MenuItem>

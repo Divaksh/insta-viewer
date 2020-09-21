@@ -1,4 +1,11 @@
 import React, { Component } from "react";
+import { withRouter } from "react-router";
+
+//local resources
+import "./Login.css";
+import Header from "../../common/header/Header";
+
+//Other resources
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
@@ -7,10 +14,6 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
-import { useHistory } from "react-router-dom";
-import "./Login.css";
-import Header from "../../common/Header";
-import { withRouter } from "react-router";
 
 const customStyles = {
   loginContainer: {
@@ -36,7 +39,7 @@ const userPassport = {
   username: "admin",
   password: "admin",
   accessToken:
-    "IGQVJWc1BsRHAtN3pyczNKalYzT19mNHNkandWeHNnenNab0xjajBDUVdxSU9qZA2R0TGc4Sm42YlVYNjFPVkhlb0JpU0x5SHBXUzlvcEM4NkxmVU9zQmFtOFBFZAlp3VkFtZAzNLZAXV3",
+    "IGQVJYZAkN1T0FCbUYxYjlRYUlBVmVWYXdGZAW94QUU0dndFTTB3aW5PVUIyeVhBdHJudjJ5TXBwX29iTHZAGcmVNdzAybGRlNUV5QlB3VHpnWlo4LXFYcVNEZAXJWZAENqbEVrRjVqQ3ZAn",
 };
 
 class Login extends Component {
@@ -111,6 +114,7 @@ class Login extends Component {
     );
   }
 
+  // Reacts on the input box changes
   inputBoxChangeHandler = (e) => {
     if (e.target.name === "username") {
       //check the event's input field name
@@ -136,6 +140,7 @@ class Login extends Component {
     }
   }; // End inputBoxChangeHandler
 
+  //Handles the login button
   loginButtonHandler = () => {
     const username = this.state.username;
     const password = this.state.password;
@@ -158,6 +163,7 @@ class Login extends Component {
     }
   };
 
+  //Validate the username and password and create session
   validateUser = (username, password) => {
     if (
       username === userPassport.username &&
